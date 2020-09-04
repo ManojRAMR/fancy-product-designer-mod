@@ -1117,5 +1117,3 @@ if(!class_exists('FPD_Admin_Ajax')) {
 }
 
 new FPD_Admin_Ajax();
-
-?>
