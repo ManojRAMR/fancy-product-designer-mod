@@ -134,12 +134,12 @@ if (!class_exists('FPD_Frontend_Product')) {
 			if ($product_settings->show_designer()) {
 
 				// MRR - FPD product from Woo or raq
-				if (isset($_GET['cart_item_key'])) {
-					//echo "woo<br>";
-					do_action('fpd_before_product_designer');
-				} else if (isset($_GET['raq_item_key'])) {
+				if (isset($_GET['raq_item_key'])) {
 					//echo "raq<br>";
 					do_action('fpd_before_product_designer_raq');
+				} else {
+					//echo "woo<br>";
+					do_action('fpd_before_product_designer');
 				}
 				// MRR-END
 
