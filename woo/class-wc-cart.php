@@ -25,11 +25,18 @@ if (!class_exists('FPD_WC_Cart')) {
 			//reset cart item link so the customized product is loaded from the cart
 			add_filter('woocommerce_cart_item_permalink', array(&$this, 'set_cart_item_permalink'), 100, 3);
 			add_filter('woocommerce_cart_item_name', array(&$this, 'reset_cart_item_link'), 100, 3);
-			/* MRR- Add FPD design product thumbnail by plugin */
+
 			//change cart item thumbnail
 			add_filter('woocommerce_cart_item_thumbnail', array(&$this, 'change_cart_item_thumbnail'), 100, 3);
 
+			/* MRR- Add FPD design product thumbnail & design links */
+			//reset raq item link so the customized product is loaded from the raq list
+			add_filter('raq_cart_item_permalink', array(&$this, 'set_raq_cart_item_permalink'), 100, 3);
+			add_filter('raq_cart_item_name', array(&$this, 'reset_raq_cart_item_link'), 100, 4);
+			//change raq item thumbnail
+			add_filter('raq_cart_item_fpd_thumbnail', array(&$this, 'change_raq_cart_item_thumbnail'), 100, 3);
 			/* MRR-END */
+
 			add_action('woocommerce_after_cart', array(&$this, 'after_cart'));
 
 			//no price when get quote is enabled
@@ -236,6 +243,21 @@ if (!class_exists('FPD_WC_Cart')) {
 			return $permalink;
 		}
 
+
+		// MRR set_raq_cart_item_permalink function
+		public function set_raq_cart_item_permalink($permalink, $raq_item_key = null)
+		{
+
+			if (!empty($permalink)) {
+
+				$permalink = add_query_arg(array('raq_item_key' => $raq_item_key), $permalink);
+			}
+
+			return $permalink;
+		}
+		// MRR- END
+
+
 		public function reset_cart_item_link($link, $cart_item, $cart_item_key)
 		{
 
@@ -278,6 +300,31 @@ if (!class_exists('FPD_WC_Cart')) {
 			return $link;
 		}
 
+		// MRR set_raq_cart_item_permalink function
+		public function reset_raq_cart_item_link($title, $permalink, $fpd_prod, $raq_item_key)
+		{
+			if (!empty($permalink)) {
+				//set again for WPML
+
+				$link = sprintf('<a href="%s">%s<br /><i style="opacity: 1; font-size: 0.9em;">%s</i></a>', $permalink, $title, FPD_Settings_Labels::get_translation('woocommerce', 'cart:_re-edit product'));
+
+				if (fpd_get_option('fpd_cart_show_element_props') === 'used_colors') {
+
+					$order = $fpd_prod;
+					if (array_key_exists('product', $order))
+						$views = $order['product'];
+					else
+						$views = $order; //deprecated: getProduct() as used instead getOrder()
+
+					$link .= '<div style="margin-top:10px;" class="fpd-wc-cart-element-colors fpd-clearfix">' . implode('', self::get_display_elements($views, 'used_colors')) . '</div>';
+				}
+			}
+
+			return $link;
+		}
+		// MRR -END
+
+
 		public function change_cart_item_thumbnail($thumbnail, $cart_item = null)
 		{
 
@@ -310,6 +357,34 @@ if (!class_exists('FPD_WC_Cart')) {
 
 			return $thumbnail;
 		}
+
+		// MRR change_raq_cart_item_thumbnail function
+		public function change_raq_cart_item_thumbnail($thumbnail, $fpd_tumb = null)
+		{
+
+			if (!empty($thumbnail) && !is_null($fpd_tumb)) {
+				$dom = new DOMDocument;
+				libxml_use_internal_errors(true);
+				$dom->loadHTML($thumbnail);
+				$xpath = new DOMXPath($dom);
+				libxml_clear_errors();
+				$doc = $dom->getElementsByTagName("img")->item(0);
+				$src = $xpath->query(".//@src");
+				$srcset = $xpath->query(".//@srcset");
+				foreach ($src as $s) {
+					$s->nodeValue = $fpd_tumb;
+				}
+
+				foreach ($srcset as $s) {
+					$s->nodeValue = $fpd_tumb;
+				}
+
+				return $dom->saveXML($doc);
+			}
+
+			return $thumbnail;
+		}
+		//MRR -END
 
 		public function after_cart()
 		{
