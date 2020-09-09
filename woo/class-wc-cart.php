@@ -29,13 +29,15 @@ if (!class_exists('FPD_WC_Cart')) {
 			//change cart item thumbnail
 			add_filter('woocommerce_cart_item_thumbnail', array(&$this, 'change_cart_item_thumbnail'), 100, 3);
 
-			/* MRR- Add FPD design product thumbnail & design links */
+			// MRR- Add FPD desinged product custom paramalink, product title link and product thumbnail to request a quote page
+
 			//reset raq item link so the customized product is loaded from the raq list
 			add_filter('raq_cart_item_permalink', array(&$this, 'set_raq_cart_item_permalink'), 100, 3);
 			add_filter('raq_cart_item_name', array(&$this, 'reset_raq_cart_item_link'), 100, 4);
 			//change raq item thumbnail
 			add_filter('raq_cart_item_fpd_thumbnail', array(&$this, 'change_raq_cart_item_thumbnail'), 100, 3);
-			/* MRR-END */
+
+			// MRR-END
 
 			add_action('woocommerce_after_cart', array(&$this, 'after_cart'));
 
@@ -244,7 +246,7 @@ if (!class_exists('FPD_WC_Cart')) {
 		}
 
 
-		// MRR set_raq_cart_item_permalink function
+		// MRR - FPD designed product paramalink modifier function for request a quote page
 		public function set_raq_cart_item_permalink($permalink, $raq_item_key = null)
 		{
 
@@ -255,7 +257,7 @@ if (!class_exists('FPD_WC_Cart')) {
 
 			return $permalink;
 		}
-		// MRR- END
+		// MRR-END
 
 
 		public function reset_cart_item_link($link, $cart_item, $cart_item_key)
@@ -300,7 +302,7 @@ if (!class_exists('FPD_WC_Cart')) {
 			return $link;
 		}
 
-		// MRR set_raq_cart_item_permalink function
+		// MRR - FPD designed product title link in request a quote page
 		public function reset_raq_cart_item_link($title, $permalink, $fpd_prod, $raq_item_key)
 		{
 			if (!empty($permalink)) {
@@ -322,7 +324,7 @@ if (!class_exists('FPD_WC_Cart')) {
 
 			return $link;
 		}
-		// MRR -END
+		// MRR-END
 
 
 		public function change_cart_item_thumbnail($thumbnail, $cart_item = null)
@@ -358,7 +360,7 @@ if (!class_exists('FPD_WC_Cart')) {
 			return $thumbnail;
 		}
 
-		// MRR change_raq_cart_item_thumbnail function
+		// MRR - FPD designed product thumbnail modifier function for request a quote page
 		public function change_raq_cart_item_thumbnail($thumbnail, $fpd_tumb = null)
 		{
 
@@ -384,7 +386,7 @@ if (!class_exists('FPD_WC_Cart')) {
 
 			return $thumbnail;
 		}
-		//MRR -END
+		// MRR-END
 
 		public function after_cart()
 		{

@@ -24,7 +24,7 @@ if (!class_exists('FPD_WC_Product')) {
 
 			add_action('fpd_before_product_designer', array(&$this, 'before_product_designer'), 1);
 
-			// MRR- before_product_designer_from_raq action
+			// MRR - Check for product that come from raq page before loading FPD
 			add_action('fpd_before_product_designer_raq', array(&$this, 'before_product_designer_from_raq'), 1);
 			// MRR-END
 
@@ -269,7 +269,8 @@ if (!class_exists('FPD_WC_Product')) {
 				//load from raq item
 				$raq = YITH_Request_Quote()->get_raq_for_session();
 				$raq_item_from_request = YITH_Request_Quote()->get_raq_for_session($_GET);
-				// MRR 
+
+
 				//$raq_item_key = array_keys($raq_item_from_request);
 				$raq_item_key = $_GET['raq_item_key'];
 				$raq_item_values = ($raq_item_from_request[$raq_item_key]);
@@ -285,7 +286,7 @@ if (!class_exists('FPD_WC_Product')) {
 				//print_r(urldecode($raq_item_value['0']['fpd_product']));
 
 				//	print_r($raq_item_arr);
-				// MRR  - END
+
 				if (!empty($raq_item_arr['quantity'])) {
 
 					$_POST['quantity'] = $raq_item_arr['quantity'];
@@ -351,7 +352,7 @@ if (!class_exists('FPD_WC_Product')) {
 				}
 			}
 		}
-		//MRR -END
+		// MRR-END
 
 		public function before_js_product_designer()
 		{
@@ -468,7 +469,7 @@ if (!class_exists('FPD_WC_Product')) {
 
 					})
 
-					// MRR add to quote
+					// MRR - Add to quote button click event handler
 					$addToQuoteBtn = $('.add-request-quote-button')
 					$addToQuoteBtn.on('click', function(evt) {
 						evt.preventDefault();
@@ -505,8 +506,8 @@ if (!class_exists('FPD_WC_Product')) {
 						}
 
 					})
+					// MRR-END
 
-					// MRR- END
 					//fill custom form with values and then submit
 					$cartForm.on('click', ':submit', function(evt) {
 

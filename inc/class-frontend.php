@@ -133,12 +133,10 @@ if (!class_exists('FPD_Frontend_Product')) {
 
 			if ($product_settings->show_designer()) {
 
-				// MRR - FPD product from Woo or raq
+				// MRR - Load fpd products from raq, cart or not both
 				if (isset($_GET['raq_item_key'])) {
-					//echo "raq<br>";
 					do_action('fpd_before_product_designer_raq');
 				} else {
-					//echo "woo<br>";
 					do_action('fpd_before_product_designer');
 				}
 				// MRR-END
@@ -438,9 +436,11 @@ if (!class_exists('FPD_Frontend_Product')) {
 							},
 							imageEditorSettings: {
 								masks: <?php echo json_encode(fpd_get_files_from_uploads_by_type('fpd_masks', array('svg')), JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT); ?>,
-								/*MRR-get feather mask location */
+
+								// MRR-get feather mask location 
 								feathers: <?php echo json_encode(fpd_get_files_from_uploads_by_type('fpd_feathers', array('svg')), JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT); ?>
-								/* MRR-END */
+								// MRR-END
+
 							},
 							guidedTour: <?php echo $guided_tour; ?>,
 							productsJSON: fpdProductsJSON,
